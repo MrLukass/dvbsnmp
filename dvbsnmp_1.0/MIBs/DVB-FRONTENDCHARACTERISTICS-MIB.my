@@ -1,0 +1,114 @@
+DVB-FRONTENDCHARACTERISTICS-MIB DEFINITIONS ::= BEGIN
+
+    IMPORTS
+        InputNumber		
+		FROM DVB-MGTR101290-MIB 
+        enterprises, OBJECT-TYPE, MODULE-IDENTITY, Integer32			
+                FROM SNMPv2-SMI			
+    TEXTUAL-CONVENTION			
+                FROM SNMPv2-TC;
+
+    mgFrontendCharacteristics MODULE-IDENTITY
+        LAST-UPDATED "201412190000Z"
+        ORGANIZATION "Lukas Zajac"
+        CONTACT-INFO    
+             "email:    zajac.ov@gmail.com"
+        DESCRIPTION
+            "Example MIB objects for agent module example implementations
+            First draft"
+        ::= { mg 10 }
+
+    dvb OBJECT IDENTIFIER ::= { enterprises 2696 }
+		
+    mg OBJECT IDENTIFIER ::= { dvb 3 }
+		
+    mgFrontendCharacteristicsObjects OBJECT IDENTIFIER ::= { mgFrontendCharacteristics 1 }
+ 
+    Percentage ::= TEXTUAL-CONVENTION
+			STATUS current
+			DESCRIPTION
+				"This represents a percent value from the whole."
+			SYNTAX Integer32 (0..100)
+
+    mgDCHTable OBJECT-TYPE
+            SYNTAX SEQUENCE OF MgDCHEntry
+            MAX-ACCESS not-accessible
+            STATUS current
+            DESCRIPTION
+                    "Dynamic Characteristics (DCH) of the actual signal, get from frontend device."
+            ::= { mgFrontendCharacteristicsObjects 1 }
+
+    mgDCHEntry OBJECT-TYPE
+            SYNTAX MgDCHEntry
+            MAX-ACCESS not-accessible
+            STATUS current
+            DESCRIPTION
+                    "Row specification"
+            INDEX { mgDCHInputNumber }
+            ::= { mgDCHTable 1 }
+
+    MgDCHEntry ::=
+            SEQUENCE { 
+                    mgDCHInputNumber
+                            InputNumber,
+                    mgDCHSignalStrength
+                            Percentage,
+                    mgDCHSignalBER
+                            Integer32,
+                    mgDCHSignalSNR
+                            Integer32,
+                    mgDCHSignalUncorrectedBlocks
+                            Integer32,
+                    mgDCHSignalFrequency
+                            Integer32
+             }
+
+    mgDCHInputNumber OBJECT-TYPE
+            SYNTAX InputNumber
+            MAX-ACCESS not-accessible
+            STATUS current
+            DESCRIPTION
+                    "The physical input on which this value appears."
+            ::= { mgDCHEntry 1 }
+
+    mgDCHSignalStrength OBJECT-TYPE
+            SYNTAX Percentage
+            MAX-ACCESS read-only
+            STATUS current
+            DESCRIPTION
+                    "The strength of the signal in percent."
+            ::= { mgDCHEntry 2 }
+
+    mgDCHSignalBER OBJECT-TYPE
+            SYNTAX Integer32
+            MAX-ACCESS read-only
+            STATUS current
+            DESCRIPTION
+                    "The BER value of the signal."
+            ::= { mgDCHEntry 3 }
+
+    mgDCHSignalSNR OBJECT-TYPE
+            SYNTAX Integer32
+            MAX-ACCESS read-only
+            STATUS current
+            DESCRIPTION
+                    "The SNR value of the signal."
+            ::= { mgDCHEntry 4 }
+
+    mgDCHSignalUncorrectedBlocks OBJECT-TYPE
+            SYNTAX Integer32
+            MAX-ACCESS read-only
+            STATUS current
+            DESCRIPTION
+                    "The uncorrected blocks count of the signal."
+            ::= { mgDCHEntry 5 }
+
+    mgDCHSignalFrequency OBJECT-TYPE
+            SYNTAX Integer32
+            MAX-ACCESS read-only
+            STATUS current
+            DESCRIPTION
+                    "The frequency of the the signal."
+            ::= { mgDCHEntry 6 }
+
+END
